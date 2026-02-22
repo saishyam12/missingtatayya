@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In Loving Memory</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body{
+    background:linear-gradient(to bottom,#e6e6e6,#f9f9f9);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    width:100%;
+    max-width:420px;
+    padding:30px 20px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    text-align:center;
+}
+
+.photo-frame{
+    width:200px;
+    height:200px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    overflow:hidden;
+    border:6px solid #dcdcdc;
+    object-fit: cover;
+}
+
+.photo-frame img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:grayscale(100%);
+}
+
+h1{
+    font-size:22px;
+    margin-bottom:8px;
+    color:#333;
+}
+
+h2{
+    font-size:18px;
+    font-weight:500;
+    margin-bottom:15px;
+    color:#555;
+}
+
+p{
+    font-size:14px;
+    color:#666;
+    margin-bottom:25px;
+    line-height:1.6;
+}
+
+button{
+    padding:12px 25px;
+    font-size:15px;
+    border:none;
+    border-radius:30px;
+    background:#2c2c2c;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#555;
+}
+
+/* Responsive improvements */
+@media (max-width:480px){
+    .photo-frame{
+        width:200px;
+        height:220px;
+    }
+    h1{
+        font-size:20px;
+    }
+    h2{
+        font-size:16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <!-- Replace with actual photo -->
+    <div class="photo-frame">
+        <img src="./tt2.jpeg" alt="Memorial Person">
+    </div>
+
+    <h1>In Loving Memory</h1>
+    <h2>Late Sri Gurram Appa Rao</h2>
+
+    <p>
+        With love and remembrance, we gather to honor a life
+        that touched our hearts deeply.
+    </p>
+
+    <button onclick="goToGuests()">Proceed to Guest List</button>
+
+</div>
+
+<script>
+function goToGuests(){
+    window.location.href="villages.html";
+}
+</script>
+
+</body>
+</html>

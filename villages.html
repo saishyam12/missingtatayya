@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guest Confirmation</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    padding:15px;
+}
+
+h2{
+    text-align:center;
+    color:white;
+    margin-bottom:15px;
+}
+
+/* Village Buttons */
+.village-container{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    margin-bottom:20px;
+}
+
+.village-btn{
+    padding:8px 15px;
+    border:none;
+    border-radius:20px;
+    background:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* People Section */
+.people-section{
+    background:white;
+    padding:15px;
+    border-radius:15px;
+    margin-bottom:15px;
+}
+
+.person-card{
+    display:flex;
+    align-items:center;
+    padding:10px;
+    margin:8px 0;
+    background:#f4f4f4;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.person-card.selected{
+    background:#2ecc71;
+    color:white;
+}
+
+.toggle{
+    width:28px;
+    height:28px;
+    border:none;
+    border-radius:50%;
+    margin-right:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* Bottom Selected List */
+.selected-section{
+    background:white;
+    padding:15px;
+    border-radius:15px;
+}
+
+.selected-list{
+    margin-top:10px;
+    font-size:14px;
+}
+
+.footer{
+    margin-top:10px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Guest Confirmation</h2>
+
+<div class="village-container" id="villageContainer"></div>
+
+<div class="people-section">
+    <h3 id="villageTitle">Select Village</h3>
+    <div id="peopleList"></div>
+</div>
+
+<div class="selected-section">
+    <h3>Confirmed Guests</h3>
+    <div id="selectedList" class="selected-list"></div>
+    <div class="footer">
+        Total Confirmed: <span id="totalCount">0</span>
+    </div>
+</div>
+
+<script>
+
+const data={
+  "Mushidigattu": [
+    "Gajjala Rama rao",
+    "Surennaidu",
+    "Labba Adinarayan",
+    "Venu",
+    "Gopi",
+    "Rajanna-Murali",
+    "Yatha Achchanna (manavadu)"
+  ],
+  "Utapeta": [
+    "Appala ramu",
+    "Janardhannaidu",
+    "Pentannaidu",
+    "Ruppa Appanna",
+    "Gangamma"
+  ],
+  "Polavalasa": [
+    "Satish",
+    "Bujji",
+    "Paparao",
+    "Parvatheeswar",
+    "Parvatheeswar (Subbarao master)"
+  ],
+  "Kollavani Peta": [
+    "Bhaskar"
+  ],
+  "Lukulam": [
+    "Raju",
+    "Hemadu",
+    "Chinthala Ramana",
+    "Chinthala Sathyannarayana",
+    "Senapathi Srinu",
+    "Senapathi Ramana",
+    "Gullavadu"
+  ],
+  "Urlam": [
+    "Rada Srinu",
+    "Narsimhulu",
+    "Annapoornamma (w/o Mesthri)",
+    "Booleka daughter"
+  ],
+  "VN Puram": [
+    "Caste",
+    "Kolli Chinnammi",
+    "Thatha babu mavayya Colony"
+  ],
+  "Pasalavani peta": [
+    "G.Apparao"
+  ],
+  "Komarthi": [
+    "Caste",
+    "M.Appalanaidu",
+    "Mookala Gopi",
+    "Ungati Raju",
+    "Sadhu Uma",
+    "Madhya veedhi all",
+    "Govindu chinnana",
+    "Sadhu chinababu",
+    "Kottu Shiva",
+    "Ramana Apparao",
+    "Ramana Venkatarao",
+    "Bullibabu caste",
+    "Chinababu",
+    "Kolli Gopi-Krishna Annaya",
+    "Simma Jagannadham, Simma Sathyam",
+    "Simma Mangamma",
+    "Danthi",
+    "K.Chandramouli",
+    "Dharmana Ramarao",
+    "Challa Govinda",
+    "Allu Ramanamma",
+    "Jangamayya Nanna",
+    "Podilapa Dhali naidu",
+    "Kolli Suryanarayana"
+  ],
+  "Gundivilipeta": [
+    "Panchi Reddy Simhachalam"
+  ],
+  "Narsannapeta": [
+    "Anand Street",
+    "Raghunadha rao",
+    "Kiran",
+    "Appanna Master",
+    "P.Ramarao",
+    "P.Krishna rao",
+    "Ramu garu",
+    "Giri",
+    "D.Ramarao",
+    "I.Ramesh",
+    "Mohan annaya",
+    "Rajarao Bujidi",
+    "Nagamma",
+    "Sai Pallukottu",
+    "Asirappa"
+  ],
+  "Ravula valasa": [
+    "Bheema rao RMP"
+  ],
+  "Pathapatnam": [
+    "Uppara veedhi",
+    "Adhi",
+    "Amara",
+    "Laxmi",
+    "Chandra mohan",
+    "Mahesh",
+    "Matta Raju",
+    "Tharuna",
+    "Thavitamma"
+  ],
+  "Parlakhemundi": [
+    "Caste",
+    "Sarojini",
+    "Laxmana",
+    "Vijaya",
+    "Hema",
+    "Leela",
+    "Srinu",
+    "Kaya Laxmi",
+    "Chinnari",
+    "Koti husband"
+  ],
+  "Devadi": [
+    "Ravi",
+    "Eenadu paper Nageshwar rao son"
+  ],
+  "Madapam": [
+    "Vijay",
+    "Sharadha ANM (NPT)",
+    "Simhadri (Ruppa/Kolli)"
+  ],
+  "Kharzada": [
+    "Jai ram - 3 houses",
+    "Narasa pinni",
+    "Bhaskar rao Master"
+  ],
+  "Singapuram": [
+    "Hanumanthu rao + family",
+    "Battala Anand"
+  ],
+  "Kolli valasa": [
+    "Caste"
+  ],
+  "Srikakulam": [
+    "Ramana Master",
+    "Vasu",
+    "Apparao",
+    "Anjali Narasimha",
+    "Anajali Narasimha Junior",
+    "Anjali Ratnam",
+    "Vallamsetti Krishna annaya - 3 families",
+    "Rambai",
+    "Punyavathi",
+    "Parvathi akka (Satyam)",
+    "Susheela",
+    "Shanmukha Rao",
+    "P.Rajagopal Rao"
+  ],
+  "Gara": [
+    "B.Rajarao Master",
+    "Ramana (Narasa pinni koduku)"
+  ],
+  "Heera mandalam": [
+    "Lakshmi (Byri)",
+    "Venkatrao Master (Manju)"
+  ],
+  "Vizag": [
+    "All family",
+    "Chinnapanna",
+    "Simhadri + daughter Bhagya",
+    "Venkat",
+    "Mangari Simhachalam + 3",
+    "Chalapathi",
+    "Nanaji",
+    "Rajula Appanna",
+    "Lakshmi w/o Apparao",
+    "Ashwini (Naidu daughter)",
+    "Sundaresham annaya",
+    "Bhasi mayya",
+    "Dusi Ramesh",
+    "Dusi Ravi",
+    "Bhanu",
+    "D.Appalnaidu",
+    "D.Prasad",
+    "Ramji annaya",
+    "Appalnaidu",
+    "Jairam",
+    "Deva bava",
+    "Chinnababu mavayya",
+    "Bhaskar rao",
+    "Jaya akka",
+    "Neelam",
+    "Rama pinni",
+    "P.Bhanu",
+    "Shekar (Leela pinni)",
+    "Hari",
+    "Govinda",
+    "Naidu (Bujji)",
+    "Laxman (Ramu)",
+    "Gurram Raju",
+    "G.Simhadri",
+    "G.Rajarao",
+    "R.Apparao",
+    "B.Appalraju",
+    "G.Buddamma",
+    "G.Ramanamma",
+    "Chittemma",
+    "G.Ramana (Bujidi)",
+    "Somu (Appalram mavayya)",
+    "Pinninti Rambabu (Anu)",
+    "Allam Srinu (Divya)",
+    "Suneetha (Podugu Simhadri)",
+    "D.Punyavathi akka",
+    "Phone/Chellay"
+  ],
+  "Vizianagaram": [
+    "Srinu-Lavanya",
+    "Prabha Sons (R.Ravi, R.Jagadish)"
+  ],
+  "Kovvuru": [
+    "Krishnakka"
+  ],
+  "Hyderabad": [
+    "Phalgunrao garu",
+    "Trinath Mamayya",
+    "Tanu",
+    "Triveni",
+    "Sumathi bappa",
+    "Kishore",
+    "Chandramouli",
+    "Sangeetha",
+    "Shekar",
+    "Sudheer",
+    "Sudhakar",
+    "Srikanth",
+    "Prabhas Srinu",
+    "Vissu",
+    "Bhaskar",
+    "Rammohan",
+    "Chandu/Ramesh",
+    "Tiru-Tulya"
+  ],
+  "Vijayawada": [
+    "Swathi",
+    "Swathi mamayya (Police)"
+  ],
+  "Thadepalligudem": [
+    "Anand in-laws"
+  ],
+  "Staff": [
+    "UP school",
+    "Venkata rao Master"
+  ]
+}
+
+let selectedGuests=new Set();   // IMPORTANT: persistent selection
+let currentVillage="";
+
+const villageContainer=document.getElementById("villageContainer");
+
+/* Create Village Buttons */
+Object.keys(data).forEach(village=>{
+    const btn=document.createElement("button");
+    btn.className="village-btn";
+    btn.innerText=village;
+    btn.onclick=()=>selectVillage(village);
+    villageContainer.appendChild(btn);
+});
+
+function selectVillage(village){
+    currentVillage=village;
+    document.getElementById("villageTitle").innerText=village+" Guests";
+    showPeople(village);
+}
+
+function showPeople(village){
+    const list=document.getElementById("peopleList");
+    list.innerHTML="";
+
+    data[village].forEach(person=>{
+        const div=document.createElement("div");
+        div.className="person-card";
+
+        if(selectedGuests.has(person)){
+            div.classList.add("selected");  // stays green
+        }
+
+        const toggle=document.createElement("button");
+        toggle.className="toggle";
+        toggle.innerText="✓";
+        toggle.onclick=()=>toggleSelect(person,div);
+
+        const name=document.createElement("span");
+        name.innerText=person;
+
+        div.appendChild(toggle);
+        div.appendChild(name);
+
+        list.appendChild(div);
+    });
+}
+
+function toggleSelect(person,card){
+
+    if(selectedGuests.has(person)){
+        selectedGuests.delete(person);
+        card.classList.remove("selected");
+    }else{
+        selectedGuests.add(person);
+        card.classList.add("selected");
+    }
+
+    updateSelectedList();
+}
+
+function updateSelectedList(){
+    const list=document.getElementById("selectedList");
+    list.innerHTML=Array.from(selectedGuests).join("<br>");
+    document.getElementById("totalCount").innerText=selectedGuests.size;
+}
+
+</script>
+
+</body>
+</html>
