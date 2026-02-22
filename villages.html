@@ -112,7 +112,9 @@ h2{
 </div>
 
 <script>
-
+let selectedGuests = new Set(
+    JSON.parse(localStorage.getItem("selectedGuests")) || []
+);
 const data={
   "Mushidigattu": [
     "Gajjala Rama rao",
@@ -368,7 +370,6 @@ const data={
   ]
 }
 
-let selectedGuests=new Set();   // IMPORTANT: persistent selection
 let currentVillage="";
 
 const villageContainer=document.getElementById("villageContainer");
@@ -426,6 +427,7 @@ function toggleSelect(person,card){
     }
 
     updateSelectedList();
+    localStorage.setItem("selectedGuests", JSON.stringify(Array.from(selectedGuests)));
 }
 
 function updateSelectedList(){
@@ -433,7 +435,7 @@ function updateSelectedList(){
     list.innerHTML=Array.from(selectedGuests).join("<br>");
     document.getElementById("totalCount").innerText=selectedGuests.size;
 }
-
+updateSelectedList();
 </script>
 
 </body>
